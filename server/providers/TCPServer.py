@@ -1,7 +1,7 @@
 import socket
 import json
 
-from BaseServer import BaseServer
+from providers.BaseServer import BaseServer
 
 
 class TCPServer(BaseServer):
@@ -25,14 +25,16 @@ class TCPServer(BaseServer):
             # Tratando 1 requisicao de 1 cliente
             while True:
                 request = self.receive_request()
-                print(f"Recebi no servidor a msg: {request}")
+                print("Mensagem do Cliente: {}".format(request))
 
-                if request != b'':
-                    self.response({
-                        'message': 'mensagem de volta'
-                    })
-                    # self.client_socket.send(request)
-                    break
+                self.execute_binded_method(request)
+
+                # if request != b'':
+                #     self.response({
+                #         'message': 'mensagem de volta'
+                #     })
+                #     # self.client_socket.send(request)
+                #     break
 
         # request_encoded, address = self.socket.recvfrom(self.buffer_size)
         # self.client_address = address
@@ -54,10 +56,3 @@ class TCPServer(BaseServer):
         response_body_encoded = str.encode(response_body)
 
         self.client_socket.send(response_body_encoded)
-    
-
-
-if __name__ == '__main__':
-    server = TCPServer()
-
-    server.listen()

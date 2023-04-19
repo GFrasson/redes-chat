@@ -1,7 +1,7 @@
 import socket
 import json
 
-from BaseServer import BaseServer
+from providers.BaseServer import BaseServer
 
 
 class UDPServer(BaseServer):
@@ -17,9 +17,7 @@ class UDPServer(BaseServer):
             request = self.receive_request()
             print("Mensagem do Cliente: {}".format(request))
 
-            path = request['headers']['path']
-            method = self.get_method_from_path(path)
-            method(request, self.response)
+            self.execute_binded_method(request)
 
     def receive_request(self):
         request_encoded, address = self.socket.recvfrom(self.buffer_size)
@@ -35,4 +33,3 @@ class UDPServer(BaseServer):
         response_body_encoded = str.encode(response_body)
 
         self.socket.sendto(response_body_encoded, self.client_address)
-

@@ -1,4 +1,4 @@
-from UDPServer import UDPServer
+from providers.UDPServer import UDPServer
 from use_cases.ArithmeticUseCase import ArithmeticUseCase
 
 

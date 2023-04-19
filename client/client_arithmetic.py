@@ -1,4 +1,4 @@
-from UDPClient import UDPClient
+from providers.UDPClient import UDPClient
 from services.ArithmeticService import ArithmeticService
 
 
