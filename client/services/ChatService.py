@@ -5,9 +5,12 @@ class ChatService:
             'path': '/message'
         }
         self.body = {
-            'message': 'Mensagem para o servidor'
+            'message': ''
         }
     
     def execute(self):
+        client_message = input('Cliente: ')
+        self.body['message'] = client_message
+        
         response = self.client.get(self.body, self.headers)
         return response

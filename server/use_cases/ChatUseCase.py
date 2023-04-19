@@ -4,7 +4,7 @@ class ChatUseCase:
 
         print('Cliente:', message)
 
-        server_message = input('Servidor:')
+        server_message = input('Servidor: ')
 
         response({
             'message': server_message

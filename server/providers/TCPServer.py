@@ -22,33 +22,20 @@ class TCPServer(BaseServer):
         while True:
             self.accept_client()
 
-            # Tratando 1 requisicao de 1 cliente
             while True:
                 request = self.receive_request()
-                print("Mensagem do Cliente: {}".format(request))
 
-                self.execute_binded_method(request)
-
-                # if request != b'':
-                #     self.response({
-                #         'message': 'mensagem de volta'
-                #     })
-                #     # self.client_socket.send(request)
-                #     break
-
-        # request_encoded, address = self.socket.recvfrom(self.buffer_size)
-        # self.client_address = address
-
-        # request_decoded = request_encoded.decode()
-        # request = json.loads(request_decoded)
-
-        # return request
+                if request is not None:
+                    self.execute_binded_method(request)
 
     def receive_request(self):
-        request_encoded = self.socket.recvfrom(self.buffer_size)
+        request_encoded = self.client_socket.recv(self.buffer_size)
         request_decoded = request_encoded.decode()
-        request = json.loads(request_decoded)
 
+        if not request_decoded:
+            return None
+
+        request = json.loads(request_decoded)
         return request
     
     def response(self, body: dict):
