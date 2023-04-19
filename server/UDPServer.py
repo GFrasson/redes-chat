@@ -14,6 +14,15 @@ class UDPServer:
         self.routes = {}
 
     def listen(self):
+        while True:
+            request = self.receive_request()
+            print("Mensagem do Cliente: {}".format(request))
+
+            path = request['headers']['path']
+            method = self.get_method_from_path(path)
+            method(request, self.response)
+
+    def receive_request(self):
         request_encoded, address = self.socket.recvfrom(self.buffer_size)
         self.client_address = address
 
@@ -27,6 +36,9 @@ class UDPServer:
         response_body_encoded = str.encode(response_body)
 
         self.socket.sendto(response_body_encoded, self.client_address)
+
+    def on(self, path, method):
+        self.routes[path] = method
 
     def register_routes(self, routes):
         for path, method in routes.items():
