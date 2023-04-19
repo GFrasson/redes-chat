@@ -1,17 +1,16 @@
 import socket
 import json
 
+from BaseServer import BaseServer
 
-class UDPServer:
+
+class UDPServer(BaseServer):
     def __init__(self):
-        self.local_ip = "127.0.0.1"
-        self.local_port = 20001
-        self.buffer_size = 1024
+        super().__init__(local_ip="127.0.0.1", local_port=20001, buffer_size=1024)
+
         self.socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         self.socket.bind((self.local_ip, self.local_port))
         print("Servidor UDP up e escutando...")
-    
-        self.routes = {}
 
     def listen(self):
         while True:
@@ -37,12 +36,3 @@ class UDPServer:
 
         self.socket.sendto(response_body_encoded, self.client_address)
 
-    def on(self, path, method):
-        self.routes[path] = method
-
-    def register_routes(self, routes):
-        for path, method in routes.items():
-            self.routes[path] = method
-
-    def get_method_from_path(self, path):
-        return self.routes[path] or None
