@@ -12,12 +12,14 @@ class UDPServer(BaseServer):
         self.socket.bind((self.local_ip, self.local_port))
         print("Servidor UDP up e escutando...")
 
-    def listen(self):
+    def thread_listen(self):
         while True:
             request = self.receive_request()
             print("Mensagem do Cliente: {}".format(request))
 
-            self.execute_binded_method(request)
+            worker = self.create_worker_thread(request)
+            if not worker.is_alive():
+                worker.start()
 
     def receive_request(self):
         request_encoded, address = self.socket.recvfrom(self.buffer_size)

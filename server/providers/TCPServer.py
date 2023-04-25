@@ -18,15 +18,23 @@ class TCPServer(BaseServer):
         self.client_socket = client_socket
         self.client_address = client_address
     
-    def listen(self):
+    def thread_listen(self):
         while True:
             self.accept_client()
 
             while True:
                 request = self.receive_request()
+                
+                if request is None:
+                    continue
 
-                if request is not None:
-                    self.execute_binded_method(request)
+                message = request['body']['message']
+                print('(CLIENTE) ', message)
+
+                # TODO: Create one worker thread for each client accepted and map an identifier
+                worker = self.create_worker_thread(request)
+                if not worker.is_alive():
+                    worker.start()
 
     def receive_request(self):
         request_encoded = self.client_socket.recv(self.buffer_size)
@@ -38,8 +46,8 @@ class TCPServer(BaseServer):
         request = json.loads(request_decoded)
         return request
     
-    def response(self, body: dict):
-        response_body = json.dumps(body)
-        response_body_encoded = str.encode(response_body)
+    def response(self, data: dict):
+        response_data = json.dumps(data)
+        response_data_encoded = str.encode(response_data)
 
-        self.client_socket.send(response_body_encoded)
+        self.client_socket.send(response_data_encoded)

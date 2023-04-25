@@ -1,11 +1,17 @@
 class ChatUseCase:
+    def __init__(self) -> None:
+        self.headers = {
+            'path': '/message'
+        }
+
     def execute(self, request, response):
-        message = request['body']['message']
+        while True:
+            server_message = input()
+            print(f'\t\t\t{server_message} (SERVIDOR)')
 
-        print('Cliente:', message)
-
-        server_message = input('Servidor: ')
-
-        response({
-            'message': server_message
-        })
+            response({
+                'headers': self.headers,
+                'body': {
+                    'message': server_message
+                }
+            })
