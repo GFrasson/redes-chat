@@ -5,6 +5,8 @@ from services.ChatService import ChatService
 if __name__ == '__main__':
     client = TCPClient()
 
-    response = ChatService(client).execute()
+    client.router.on('/message', lambda response: ChatService(client).execute())
 
-    print("Mensagem vinda do Servidor {}".format(response))
+    client.listen()
+
+    ChatService(client).execute()
